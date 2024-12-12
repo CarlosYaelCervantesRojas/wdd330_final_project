@@ -13,15 +13,16 @@ export async function createToken() {
     localStorage.setItem("access_token", data.access_token);
 }
 
-export async function fetchURL(url, signal, accesToken) {
+export async function fetchURL(url, signal) {
     try {
         const res = await fetch(url, {
             signal: signal,
-            headers: {Authorization: `Bearer ${accesToken}`}
+            headers: {Authorization: `Bearer ${localStorage.getItem("access_token")}`}
         });
     
         if (res.status === 401) {
             localStorage.removeItem("access_token");
+            await createToken();
         }
         const data = await res.json();
         
@@ -29,13 +30,4 @@ export async function fetchURL(url, signal, accesToken) {
     } catch (error) {
         console.log(error)
     }
-}
-
-export function listTemplate(list) {
-    const listTemplate = list.map(item => {
-        console.log(item.images[0].url);
-        return `
-        <img src="${item.images[0].url}">`;
-    }).join("");
-    return listTemplate;
 }

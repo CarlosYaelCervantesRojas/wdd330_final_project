@@ -24,7 +24,7 @@ search.addEventListener("input", async (e) => {
         abortController = new AbortController();
         const signal = abortController.signal;
     
-        const data = await fetchURL(`${baseUrl}${endpoints.search}q=${e.target.value}&type=album,artist,track&limit=2`, signal, accesToken); 
+        const data = await fetchURL(`${baseUrl}${endpoints.search}q=${e.target.value}&type=album,artist,track&limit=5`, signal); 
         if (data) {
             dataListing.setNewData(data);
         }
