@@ -5,7 +5,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const accesToken = localStorage.getItem("access_token");
 
 if (!accesToken) {
-    await createToken();
+    createToken();
 }
 
 const search = document.getElementById("search");

@@ -22,7 +22,7 @@ export default class DataList {
 }
 
 function artistListingTemplate(list) {
-    console.log(list);
+    // console.log(list);
     let listTemplate = `
     <h2>Artists</h2>
     <ul id="artist_list">`;
