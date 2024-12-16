@@ -32,3 +32,10 @@
 .artist_container img{
     border-radius: 50%;
 }
+
+.track_container img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}

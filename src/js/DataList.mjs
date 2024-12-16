@@ -14,22 +14,54 @@ export default class DataList {
     init() {
         const albums = albumListingTemplate(this.albums.items);
         const artists = artistListingTemplate(this.artists.items);
-        // const tracks = listTemplate(this.tracks.items)
+        const tracks = trackListingTemplate(this.tracks.items)
 
-        this.parentElemet.innerHTML =  albums + artists;
+        this.parentElemet.innerHTML =  albums + artists + tracks;
     }
 
 }
 
+function trackListingTemplate(list) {
+    console.log(list);
+    let listTemplate = `
+    <h2>Songs</h2>
+    <table>`;
+    listTemplate += list.map(item => {
+        return `
+        <tr class="track_container">
+            <td>
+                <a href="/track/index.html?id=${item.id}">
+                    <picture>
+                        <img src="${item.album.images[0].url}" load="lazy">
+                    </picture>
+                </a>
+            </td>
+            <td>
+                <a href="/track/index.html?id=${item.id}">${item.name}</a>
+                <br>
+                ${
+                    item.artists.map(artist => {
+                        return `<a href="/?artist=${artist.id}">${artist.name}</a>`
+                    }).join(", ")
+                }
+            </td>
+            <td>
+                <p>${Math.floor(item.duration_ms / 60000)}:${Math.floor((item.duration_ms % 60000) / 1000) < 10 ? 0 : ""}${Math.floor((item.duration_ms % 60000) / 1000)}</p>
+            </td>
+        </tr>`;
+    }).join("");
+    listTemplate += "</table>"
+    return listTemplate;
+}
+
 function artistListingTemplate(list) {
-    // console.log(list);
     let listTemplate = `
     <h2>Artists</h2>
     <ul id="artist_list">`;
     listTemplate += list.map(item => {
         return `
         <li class="artist_container">
-            <a href="/?artist=${item.id}">
+            <a href="/artist/index.html?id=${item.id}">
                 <picture>
                     <img src="${item.images[0].url}" load="lazy">
                 </picture>
@@ -50,7 +82,7 @@ function albumListingTemplate(list) {
     listTemplate += list.map(item => {
         return `
         <li class="album_container">
-            <a href="/?album=${item.id}">
+            <a href="/album/index.html?id=${item.id}">
                 <picture>
                     <img src="${item.images[0].url}" load="lazy">
                 </picture>
