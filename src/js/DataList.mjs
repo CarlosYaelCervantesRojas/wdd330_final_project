@@ -1,3 +1,5 @@
+import { listArtists, msToMinSec } from "./utils.mjs";
+
 export default class DataList {
     constructor (parentElemet) {
         this.albums;
@@ -22,11 +24,11 @@ export default class DataList {
 }
 
 function trackListingTemplate(list) {
-    console.log(list);
     let listTemplate = `
     <h2>Songs</h2>
     <table>`;
     listTemplate += list.map(item => {
+        const { min, sec } = msToMinSec(item.duration_ms);
         return `
         <tr class="track_container">
             <td>
@@ -39,14 +41,10 @@ function trackListingTemplate(list) {
             <td>
                 <a href="/track/index.html?id=${item.id}">${item.name}</a>
                 <br>
-                ${
-                    item.artists.map(artist => {
-                        return `<a href="/?artist=${artist.id}">${artist.name}</a>`
-                    }).join(", ")
-                }
+                ${listArtists(item.artists)}
             </td>
             <td>
-                <p>${Math.floor(item.duration_ms / 60000)}:${Math.floor((item.duration_ms % 60000) / 1000) < 10 ? 0 : ""}${Math.floor((item.duration_ms % 60000) / 1000)}</p>
+                <p>${min}:${sec}</p>
             </td>
         </tr>`;
     }).join("");
@@ -90,11 +88,7 @@ function albumListingTemplate(list) {
                     <a href="/?album=${item.id}">${item.name}</a>
                     <p>${new Date(item.release_date).getFullYear()}</p>
                     &#x2022;
-                    ${
-                        item.artists.map(artist => {
-                            return `<a href="/?artist=${artist.id}">${artist.name}</a>`
-                        }).join(", ")
-                    }
+                    ${listArtists(item.artists)}
                 </div>
             </a>
         </li>`;

@@ -1,6 +1,8 @@
 export const endpoints = {
+    baseUrl: import.meta.env.VITE_BASE_URL,
     token: "https://accounts.spotify.com/api/token",
-    search: "/search?"
+    search: "/search?",
+    album: "/albums/"
 };
 
 export async function createToken() {
@@ -24,10 +26,44 @@ export async function fetchURL(url, signal) {
             localStorage.removeItem("access_token");
             await createToken();
         }
-        const data = await res.json();
+
+        if (res.ok) {
+            const data = await res.json();
         
-        return data;
+            return data;
+        }
     } catch (error) {
         console.log(error)
     }
+}
+
+export function getParam(param) {
+    const queryString = window.location.search;
+    const urlParam = new URLSearchParams(queryString);
+    const paramId = urlParam.get(param);
+    return paramId;
+}
+
+export function qs(selector, parent = document) {
+    return parent.querySelector(selector);
+}
+
+export function setTitle(parentElement, title) {
+    parentElement.innerHTML += title;
+}
+
+export function msToMinSec(milisec) {
+    const min = Math.floor(milisec/60000);
+    const s = Math.floor((milisec % 60000)/1000);
+    const sec = s < 10 ? `0${s}` : s;
+
+    return {min, sec}
+}
+
+export function listArtists(list) {
+    const artistsListTemplate = list.map(artist => {
+        return `<a href="/?artist=${artist.id}">${artist.name}</a>`
+    }).join(", ");
+
+    return artistsListTemplate;
 }

@@ -1,6 +1,5 @@
 import DataList from "./DataList.mjs";
 import { createToken, endpoints, fetchURL } from "./utils.mjs";
-const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const accesToken = localStorage.getItem("access_token");
 
@@ -27,7 +26,8 @@ search.addEventListener("input", async (e) => {
         abortController = new AbortController();
         const signal = abortController.signal;
     
-        const data = await fetchURL(`${baseUrl}${endpoints.search}q=${userInput}&type=album,artist,track&limit=5`, signal); 
+        const data = await fetchURL(`${endpoints.baseUrl}${endpoints.search}q=${userInput}&type=album,artist,track&limit=5`, signal); 
+        
         if (data) {
             dataListing.setNewData(data);
         }
