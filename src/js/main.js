@@ -1,5 +1,7 @@
 import DataList from "./DataList.mjs";
-import { createToken, endpoints, fetchURL } from "./utils.mjs";
+import { createToken, endpoints, fetchURL, qs, renderHeaderFooter } from "./utils.mjs";
+
+renderHeaderFooter(qs("header"), qs("footer"));
 
 const accesToken = localStorage.getItem("access_token");
 
@@ -10,9 +12,8 @@ if (!accesToken) {
 }
 
 const search = document.getElementById("search");
-const content = document.getElementById("content");
 
-const dataListing = new DataList(content);
+const dataListing = new DataList();
 let abortController;
 search.addEventListener("input", async (e) => {
     const userInput = encodeURIComponent(e.target.value).trim();

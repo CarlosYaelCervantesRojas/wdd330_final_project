@@ -1,11 +1,10 @@
-import { listArtists, msToMinSec } from "./utils.mjs";
+import { listArtists, renderWithTemplate, trackListingTemplate, qs } from "./utils.mjs";
 
 export default class DataList {
-    constructor (parentElemet) {
+    constructor () {
         this.albums;
         this.artists;
         this.tracks;
-        this.parentElemet = parentElemet;
     }
     setNewData(data) {
         this.albums = data.albums;
@@ -14,42 +13,11 @@ export default class DataList {
         this.init();
     }
     init() {
-        const albums = albumListingTemplate(this.albums.items);
-        const artists = artistListingTemplate(this.artists.items);
-        const tracks = trackListingTemplate(this.tracks.items)
-
-        this.parentElemet.innerHTML =  albums + artists + tracks;
+        renderWithTemplate(albumListingTemplate(this.albums.items), qs(".albums"), "afterbegin", true);
+        renderWithTemplate(artistListingTemplate(this.artists.items), qs(".artists"), "afterbegin", true);
+        renderWithTemplate(trackListingTemplate(this.tracks.items, "Tracks"), qs(".tracks"), "afterbegin", true);
     }
 
-}
-
-function trackListingTemplate(list) {
-    let listTemplate = `
-    <h2>Songs</h2>
-    <table>`;
-    listTemplate += list.map(item => {
-        const { min, sec } = msToMinSec(item.duration_ms);
-        return `
-        <tr class="track_container">
-            <td>
-                <a href="/track/index.html?id=${item.id}">
-                    <picture>
-                        <img src="${item.album.images[0].url}" load="lazy">
-                    </picture>
-                </a>
-            </td>
-            <td>
-                <a href="/track/index.html?id=${item.id}">${item.name}</a>
-                <br>
-                ${listArtists(item.artists)}
-            </td>
-            <td>
-                <p>${min}:${sec}</p>
-            </td>
-        </tr>`;
-    }).join("");
-    listTemplate += "</table>"
-    return listTemplate;
 }
 
 function artistListingTemplate(list) {
@@ -64,7 +32,7 @@ function artistListingTemplate(list) {
                     <img src="${item.images[0].url}" load="lazy">
                 </picture>
                 <div>
-                    <p>${item.name}</p>
+                    <p class="main__name">${item.name}</p>
                 </div>
             </a>
         </li>`;
@@ -84,11 +52,9 @@ function albumListingTemplate(list) {
                 <picture>
                     <img src="${item.images[0].url}" load="lazy">
                 </picture>
-                <div>
-                    <a href="/?album=${item.id}">${item.name}</a>
-                    <p>${new Date(item.release_date).getFullYear()}</p>
-                    &#x2022;
-                    ${listArtists(item.artists)}
+                <div class="album__artist">
+                    <a class="main__name" href="/album/index.html?id=${item.id}">${item.name}</a>
+                    <p>${new Date(item.release_date).getFullYear()} &#x2022; ${listArtists(item.artists)}</p>
                 </div>
             </a>
         </li>`;
